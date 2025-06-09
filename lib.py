@@ -4,10 +4,9 @@ import os
 import time
 
 import sys
-# Absolute path to the folder containing your module
-module_path = '/home/nmalhis/Tools/AFF/'
-if module_path not in sys.path:
-    sys.path.append(module_path)
+
+if aff_path not in sys.path:
+    sys.path.append(aff_path)
 
 from annotated_fasta import *
 
