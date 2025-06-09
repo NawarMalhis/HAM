@@ -2,8 +2,9 @@ import argparse
 import numpy as np
 import os
 import time
-
 import sys
+
+from ham_param import *
 
 if aff_path not in sys.path:
     sys.path.append(aff_path)

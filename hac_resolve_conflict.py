@@ -2,10 +2,10 @@
 from lib import hac_resolve_conflict, get_resolve_arguments
 import os
 import sys
-# Absolute path to the folder containing your module
-module_path = '/home/nmalhis/Tools/AFF/'
-if module_path not in sys.path:
-    sys.path.append(module_path)
+from ham_param import *
+
+if aff_path not in sys.path:
+    sys.path.append(aff_path)
 
 from annotated_fasta import *
 
