@@ -1,0 +1,13 @@
+python3 ham.py -in1 TS2008.af -in2 TR2008.af -p data
+python3 ham_mask_homologous.py -in TS2008.af -p data
+python3 ham_mask_homologous.py -in TR2008.af -p data
+
+python3 hac.py -in TR2008.af -p data
+python3 hac_resolve_conflict.py -in TR2008.af -p data -pr '-'
+python3 hac_resolve_conflict.py -in TR2008.af -p data -pr '01'
+python3 hac_resolve_conflict.py -in TR2008.af -p data -pr '10'
+
+python3 hac.py -in TS2008.af -p data
+python3 hac_resolve_conflict.py -in TS2008.af -p data -pr '-'
+python3 hac_resolve_conflict.py -in TS2008.af -p data -pr '01'
+python3 hac_resolve_conflict.py -in TS2008.af -p data -pr '10'

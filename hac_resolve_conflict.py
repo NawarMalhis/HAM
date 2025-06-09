@@ -1,0 +1,29 @@
+# from annotated_fasta import annotated_fasta_load, annotated_fasta_save
+from lib import hac_resolve_conflict, get_resolve_arguments
+import os
+import sys
+# Absolute path to the folder containing your module
+module_path = '/home/nmalhis/Tools/AFF/'
+if module_path not in sys.path:
+    sys.path.append(module_path)
+
+from annotated_fasta import *
+
+
+if __name__ == '__main__':
+    arg = get_resolve_arguments()
+    target_file = arg.in_file
+    data_path = arg.path
+    priority = arg.priority
+    # target_file = arg.in_file
+    # data_path = arg.path
+    # priority = arg.priority
+    results_path = f'{data_path}/results/'
+    target_name = target_file.split('.')[0]
+    # af = annotated_fasta_load(f"{data_path}/{target_file}")
+    afc = annotated_fasta_load(f"{results_path}{target_name}-annotation-conflict.af")
+    hac_resolve_conflict(afc, priority=priority)
+    ex = priority
+    if priority == '-':
+        ex = 'masked'
+    annotated_fasta_save(afc, f"{data_path}/{target_name}-resolved-{ex}.af")
