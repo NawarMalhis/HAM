@@ -23,6 +23,8 @@ git clone https://github.com/NawarMalhis/HAM.git
 git clone https://github.com/NawarMalhis/AFF.git
 # Change directory:	
 cd HAM
+# Update the path to the AFF (annotated fasta format) folder in ham_param.py
+aff_path = '/xxx/xxx/AFF/'
 # Create a conda ham environment:
 conda env create -f ham.yml
 ```
