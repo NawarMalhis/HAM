@@ -15,10 +15,15 @@ RAM: 8 GB minimum, 16 GB recommended.
 CPU: Multicore with 4+ cores recommended.
 
 ## To install:
-Create a conda ham environment:
+
 ```bash
-# clone the HAM software:	
+# Clone the HAM software:	
 git clone https://github.com/NawarMalhis/HAM.git
+# Clone the "annotated fasta format" library:	
+git clone https://github.com/NawarMalhis/AFF.git
+# Change directory:	
+cd HAM
+# Create a conda ham environment:
 conda env create -f ham.yml
 ```
 
