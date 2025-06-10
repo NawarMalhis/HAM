@@ -58,8 +58,8 @@ First, we run ham.py for each of our training/testing datasets to identify share
 (ham_env) ~/Tools/HAM$ python3 ham.py -in1 TS2008.af -in2 TR2008.af -p ~/data/
 ```
 A results directory is created inside our data directory, and three files are added:
-    • ham-details-TS2008-TR2008.tsv: includes a list of the one-to-one residue homology between the two input files.
-    • TR2008-homology-to-TS2008.af: this is the same TR2008.af input file with three extra annotation lines added, H0, shows the ‘0’ annotations of homologous residues in TS2008.af. 'H1' shows the '1' annotations of homologous residues, and 'H-'shows the '-'annotations of homologous residues. Example line:
+(1) ham-details-TS2008-TR2008.tsv: includes a list of the one-to-one residue homology between the two input files.
+(2) TR2008-homology-to-TS2008.af: this is the same TR2008.af input file with three extra annotation lines added, H0, shows the ‘0’ annotations of homologous residues in TS2008.af. 'H1' shows the '1' annotations of homologous residues, and 'H-'shows the '-'annotations of homologous residues. Example line:
 ```bash
 >PDB:1a3b_I
 ITYTDCTESGQDLCLCEGSDVCGKGNKCILGSNGEENQCVTGEGTPKPQSHNDGDFEEIPEEYLQ
@@ -68,7 +68,7 @@ ITYTDCTESGQDLCLCEGSDVCGKGNKCILGSNGEENQCVTGEGTPKPQSHNDGDFEEIPEEYLQ
 ........................................................111111...
 ..........................--------...............................
 ```
-    • TS2008-homology-to-TR2008.af: just like with TR2008-homology-to-TS2008.af. This file identifies regions in TS2008.af that are homologous to those in TR2008.af.
+(3) TS2008-homology-to-TR2008.af: just like with TR2008-homology-to-TS2008.af. This file identifies regions in TS2008.af that are homologous to those in TR2008.af.
 
 
 
