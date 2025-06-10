@@ -60,7 +60,7 @@ First, we run ham.py for each of our training/testing datasets to identify share
 A results directory is created inside our data directory, and three files are added:
     • ham-details-TS2008-TR2008.tsv: includes a list of the one-to-one residue homology between the two input files.
     • TR2008-homology-to-TS2008.af: this is the same TR2008.af input file with three extra annotation lines added, H0, shows the ‘0’ annotations of homologous residues in TS2008.af. 'H1' shows the '1' annotations of homologous residues, and 'H-'shows the '-'annotations of homologous residues. Example line:
-    ```bash
+```bash
 >PDB:1a3b_I
 ITYTDCTESGQDLCLCEGSDVCGKGNKCILGSNGEENQCVTGEGTPKPQSHNDGDFEEIPEEYLQ
 00000000000000000000000000000000000000000000000000000111111111110
