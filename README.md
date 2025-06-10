@@ -30,7 +30,48 @@ conda env create -f ham.yml
 ```
 
 ## To run:
-Activate the ham_env environment:
+
 ```bash
+# Activate the ham_env environment:
 conda activate ham_env
 ```
+
+## Input data:
+Input data should be in an annotated fasta format such that each sequence is annotated with a single line of annotation; for each sequence, we need a fasta header line with a unique accession, a sequence line, and an annotation line. Annotations can include '1', '0', and '-'. Where '-'is used as a mask that is neither '1' nor '0'. The annotated fasta format file can start with lines marked with '#' as comments. Example of a sequence in an annotated fasta format with a single annotation line:
+```bash
+>Q86FP9
+MKHFAILILAVVASAVVMAYPERDSAKEGNQEQERALHVKVQKRTDGDADYDEYEEDGTTPTPDPTAPTAKPRLRGNKP
+000000000000000000000000000000000---------0000000000000000000000000001111100000
+```
+All input files (datasets) need to be in the same data directory. Our input files TR2008.af and TS2008.af are in the data directory' data/'. 
+The data directory can be located anywhere.
+
+## Optional parameters for ham.py and hac.py:
+
+    • Identity cut off, default 80%:	-ico 80	
+    • Minimum aligned size, default 10:	-msz	10
+    • Number of threads, default 8:	-num_threads 8
+
+## Example:
+First, we run ham.py for each of our training/testing datasets to identify shared homologous regions.
+```bash
+(ham_env) ~/Tools/HAM$ python3 ham.py -in1 TS2008.af -in2 TR2008.af -p ~/data/
+```
+A results directory is created inside our data directory, and three files are added:
+    • ham-details-TS2008-TR2008.tsv: includes a list of the one-to-one residue homology between the two input files.
+    • TR2008-homology-to-TS2008.af: this is the same TR2008.af input file with three extra annotation lines added, H0, shows the ‘0’ annotations of homologous residues in TS2008.af. 'H1' shows the '1' annotations of homologous residues, and 'H-'shows the '-'annotations of homologous residues. Example line:
+    ```bash
+>PDB:1a3b_I
+ITYTDCTESGQDLCLCEGSDVCGKGNKCILGSNGEENQCVTGEGTPKPQSHNDGDFEEIPEEYLQ
+00000000000000000000000000000000000000000000000000000111111111110
+.................000000000000....................................
+........................................................111111...
+..........................--------...............................
+```
+    • TS2008-homology-to-TR2008.af: just like with TR2008-homology-to-TS2008.af. This file identifies regions in TS2008.af that are homologous to those in TR2008.af.
+
+
+
+
+
+
