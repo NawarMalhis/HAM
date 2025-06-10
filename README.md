@@ -70,6 +70,18 @@ ITYTDCTESGQDLCLCEGSDVCGKGNKCILGSNGEENQCVTGEGTPKPQSHNDGDFEEIPEEYLQ
 ```
 (3) TS2008-homology-to-TR2008.af: just like with TR2008-homology-to-TS2008.af. This file identifies regions in TS2008.af that are homologous to those in TR2008.af.
 
+Note that we can run ham multiple times against different files:
+```bash
+(ham_env) ~/Tools/HAM$ python3 ham.py -in1 TS2008.af -in2 xxxx.af -p ~/data/
+(ham_env) ~/Tools/HAM$ python3 ham.py -in1 TS2008.af -in2 yyyy.af -p ~/data/
+```
+Then, we run ham_mask_homologous.py to mask homologous residues identified by all previous runs:
+```bash
+(ham_env) ~/Tools/HAM$ python3 ham_mask_homologous.py -in TS2008.af -p data/
+```
+ham_mask_homologous reads TS2008.af from the data directory, then searches for all files in the results directory that start with "TS2008-homology-to-", and processes them one at a time by masking TS2008.af residues that are homologous. So, in this example, ham_mask_homologous will consider TS2008-homology-to-TR2008.af, TS2008-homology-to-xxxx.af, and TS2008-homology-to-yyyy.af.
+The final masked dataset is saved in the data directory as ham-masked-TS2008.af
+
 
 
 
