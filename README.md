@@ -2,17 +2,19 @@
 
 While annotated protein sequences are widely used in machine learning applications, pre-processing these sequences regarding homology is mainly limited to clustering complete sequences based on global alignment without considering their annotations. Here, I am introducing new tools that identify all possible local homologies between annotated sequences within the same or across two datasets and then resolve these homologies.
 
-#### Please reference the following preprint:
+**Please reference the following preprint:**
 
 Malhis N. Pre-processing annotated homologous regions in protein sequences concerning machine-learning applications" *bioRxiv* (2024). [doi.org/10.1101/2024.10.25.620288] (https://doi.org/10.1101/2024.10.25.620288).  
 
-## Minimum Hardware Requirements
+# Minimum Hardware Requirements
 
 OS: Linux (tested on Ubuntu).
+
 RAM: 8 GB minimum, 16 GB recommended.
+
 CPU: Multicore with 4+ cores recommended.
 
-## To install:
+# To install:
 
 ```bash
 # Clone the HAM software:	
@@ -27,14 +29,14 @@ aff_path = '/xxx/xxx/AFF/'
 conda env create -f ham.yml
 ```
 
-## To run:
+# To run:
 
 ```bash
 # Activate the ham_env environment:
 conda activate ham_env
 ```
 
-## Input data:
+# Input data:
 Input data should be in an annotated fasta format such that each sequence is annotated with a single line of annotation; for each sequence, we need a fasta header line with a unique accession, a sequence line, and an annotation line. Annotations can include '1', '0', and '-'. Where '-'is used as a mask that is neither '1' nor '0'. The annotated fasta format file can start with lines marked with '#' as comments. Example of a sequence in an annotated fasta format with a single annotation line:
 ```bash
 >Q86FP9
@@ -44,7 +46,7 @@ MKHFAILILAVVASAVVMAYPERDSAKEGNQEQERALHVKVQKRTDGDADYDEYEEDGTTPTPDPTAPTAKPRLRGNKP
 All input files (datasets) need to be in the same data directory. Our input files TR2008.af and TS2008.af are in the data directory' data/'. 
 The data directory can be located anywhere.
 
-## Optional parameters for ham.py and hac.py:
+# Optional parameters for ham.py and hac.py:
 
     • Identity cut off, default 80%:	-ico 80	
     • Minimum aligned size, default 10:	-msz	10
@@ -53,7 +55,7 @@ The data directory can be located anywhere.
 ## HAM: Measuring Annotated Homology
 This includes two tools, ham.py and ham_mask_homologous.py. The first, ham.py, identifies homologous regions between the two input files. The second, ham_mask_homologous.py, masks those regions identified by ham.py.
 
-## HAM Example:
+# HAM Example:
 First, we run ham.py for each of our training/testing datasets to identify shared homologous regions.
 ```bash
 (ham_env) ~/Tools/HAM$ python3 ham.py -in1 TS2008.af -in2 TR2008.af -p ~/data/
@@ -83,10 +85,19 @@ Then, we run ham_mask_homologous.py to mask homologous residues identified by al
 ham_mask_homologous reads TS2008.af from the data directory, then searches for all files in the results directory that start with "TS2008-homology-to-", and processes them one at a time by masking TS2008.af residues that are homologous. So, in this example, ham_mask_homologous will consider TS2008-homology-to-TR2008.af, TS2008-homology-to-xxxx.af, and TS2008-homology-to-yyyy.af.
 The final masked dataset is saved in the data directory as ham-masked-TS2008.af
 
-## HAC Example:
+## HAC: Homology Annotation Conflict
+This includes two tools, hac.py and hac_resolve_conflict.py. The first, hac.py, identifies homologous regions with conflicting annotations between the sequences of the input file. The second, hac_resolve_conflict.py, enables us to resolve these conflicting annotations identified by hac.py by reannotating them with either '1', '0', or '-' (masking).
 
+# HAC Example:
+Our input file TR2008.af in the data directory 'data/'. First, we run hac.py for each input file:
 
 ```bash
+(ham_env) ~/Tools/HAM$ python3 hac.py -in TR2008.af -p data
 ```
+This generates two files: 
+    • hac-details-TR2008.tsv: includes a list of the one-to-one residue homology between the sequences of the input file.
+    • TR2008-annotation-conflict.af: the same TR2008.af input file with two extra annotation lines added, H0 shows the '0' annotations of the homologous residues in TR2008.af. and 'H1' shows the '1' annotations. Example sequence with annotations in the TR2008-annotation-conflict.af file:
 
+
+    
 
