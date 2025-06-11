@@ -4,7 +4,7 @@ While annotated protein sequences are widely used in machine learning applicatio
 
 **Please reference the following preprint:**
 
-Malhis N. Pre-processing annotated homologous regions in protein sequences concerning machine-learning applications" *bioRxiv* (2024). [doi.org/10.1101/2024.10.25.620288] (https://doi.org/10.1101/2024.10.25.620288).  
+Malhis N. Pre-processing annotated homologous regions in protein sequences concerning machine-learning applications" *bioRxiv* (2024). https://doi.org/10.1101/2024.10.25.620288   
 
 ### Minimum Hardware Requirements
 
