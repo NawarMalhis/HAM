@@ -108,6 +108,7 @@ To resolve the conflict, we can choose one of three priorities: '01', '10', and 
 ```bash
 (ham_env) ~/Tools/HAM$ python3 hac_resolve_conflict.py -in TR2008.af -p data/ -pr '01'
 ```
+
 '01' converts conflicting annotations of '0' and '1' into '1'. Thus, the updated annotation to the above sequence is:
 ```bash
 00000000000000000000000000000000000000000000000000111111111111111
@@ -119,6 +120,7 @@ The final dataset with resolved annotations is saved in the data directory as TR
 00000000000000000000000000000000000000000000000000000011111100000
 ```
 The final dataset with resolved annotations is saved in the data directory as TR2008-resolved-10.af
+
 '-' converts conflicting annotations of '0' and '1' into '-'. Thus, the updated annotation to the above sequence is:
 ```bash
 00000000000000000000000000000000000000000000000000----111111-----
