@@ -1,5 +1,5 @@
-# HAM
-Measuring Annotated Homology
+# Measuring Annotated Homology (HAM) and Homology Annotation Conflict (HAC)
+
 While annotated protein sequences are widely used in machine learning applications, pre-processing these sequences regarding homology is mainly limited to clustering complete sequences based on global alignment without considering their annotations. Here, I am introducing new tools that identify all possible local homologies between annotated sequences within the same or across two datasets and then resolve these homologies.
 
 #### Please reference the following preprint:
@@ -9,9 +9,7 @@ Malhis N. Pre-processing annotated homologous regions in protein sequences conce
 ## Minimum Hardware Requirements
 
 OS: Linux (tested on Ubuntu).
-
 RAM: 8 GB minimum, 16 GB recommended.
-
 CPU: Multicore with 4+ cores recommended.
 
 ## To install:
@@ -52,7 +50,10 @@ The data directory can be located anywhere.
     • Minimum aligned size, default 10:	-msz	10
     • Number of threads, default 8:	-num_threads 8
 
-## Example:
+## HAM: Measuring Annotated Homology
+This includes two tools, ham.py and ham_mask_homologous.py. The first, ham.py, identifies homologous regions between the two input files. The second, ham_mask_homologous.py, masks those regions identified by ham.py.
+
+## HAM Example:
 First, we run ham.py for each of our training/testing datasets to identify shared homologous regions.
 ```bash
 (ham_env) ~/Tools/HAM$ python3 ham.py -in1 TS2008.af -in2 TR2008.af -p ~/data/
@@ -82,8 +83,10 @@ Then, we run ham_mask_homologous.py to mask homologous residues identified by al
 ham_mask_homologous reads TS2008.af from the data directory, then searches for all files in the results directory that start with "TS2008-homology-to-", and processes them one at a time by masking TS2008.af residues that are homologous. So, in this example, ham_mask_homologous will consider TS2008-homology-to-TR2008.af, TS2008-homology-to-xxxx.af, and TS2008-homology-to-yyyy.af.
 The final masked dataset is saved in the data directory as ham-masked-TS2008.af
 
+## HAC Example:
 
 
-
+```bash
+```
 
 
