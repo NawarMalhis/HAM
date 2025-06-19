@@ -81,7 +81,7 @@ def load_data_1file(arg):
     counts = [0, 0]
     pf1 = f"{arg.path}/{arg.in_file}"
     if1 = arg.in_file.split('.')[0]
-    af = annotated_fasta_load(in_file=pf1)
+    af = aff_load(in_file=pf1)
 
     tg = 'mask'
     if len(af['metadata']['tags']) > 0:
@@ -100,8 +100,8 @@ def load_data_2files(arg):
     pf2 = f"{arg.path}/{arg.in_file2}"
     if1 = arg.in_file1.split('.')[0]
     if2 = arg.in_file2.split('.')[0]
-    data2['a_fasta'][if1] = annotated_fasta_load(in_file=pf1)
-    data2['a_fasta'][if2] = annotated_fasta_load(in_file=pf2)
+    data2['a_fasta'][if1] = aff_load(in_file=pf1)
+    data2['a_fasta'][if2] = aff_load(in_file=pf2)
     for df in data2['a_fasta']:
         tg = data2['a_fasta'][df]['metadata']['tags'][0]
         for ac in data2['a_fasta'][df]['data']:
@@ -259,7 +259,7 @@ def hac_cross_stat(af, counts, d_name=''):
 
 def ham_cross_stat(af, f1, f2):
     if not af['metadata']['statistics']:
-        annotated_fasta_gen_statistics(af)
+        aff_gen_statistics(af)
     ky_list = af['metadata']['tags']
     counts = np.zeros((3, 3), dtype='int32')
     for ac in af['data']:

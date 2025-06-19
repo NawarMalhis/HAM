@@ -21,9 +21,9 @@ if __name__ == '__main__':
     results_path = f'{data_path}/results/'
     target_name = target_file.split('.')[0]
     # af = annotated_fasta_load(f"{data_path}/{target_file}")
-    afc = annotated_fasta_load(f"{results_path}{target_name}-annotation-conflict.af")
+    afc = aff_load(f"{results_path}{target_name}-annotation-conflict.af")
     hac_resolve_conflict(afc, priority=priority)
     ex = priority
     if priority == '-':
         ex = 'masked'
-    annotated_fasta_save(afc, f"{data_path}/{target_name}-resolved-{ex}.af")
+    aff_save(afc, f"{data_path}/{target_name}-resolved-{ex}.af")
