@@ -81,11 +81,11 @@ def load_data_1file(arg):
     counts = [0, 0]
     pf1 = f"{arg.path}/{arg.in_file}"
     if1 = arg.in_file.split('.')[0]
-    af = aff_load(in_file=pf1)
+    af = aff_load_simple(in_file=pf1)  # aff_load(in_file=pf1)
 
-    tg = 'mask'
-    if len(af['metadata']['tags']) > 0:
-        tg = af['metadata']['tags'][0]
+    tg = 'ANN'
+    if len(af['metadata']['tags_dict']) > 0:
+        tg = list(af['metadata']['tags_dict'].keys())[0]
     for ac in af['data']:
         for m in af['data'][ac][tg]:
             if m in ['0', '1']:
@@ -231,7 +231,7 @@ def get_homology_file_names(names):
 def hac_cross_stat(af, counts, d_name=''):
     sz = len(af['data'])
     # counts = [0, 0]
-    tg = af['metadata']['tags'][0]
+    tg = list(af['metadata']['tags_dict'])[0]
     homology = np.zeros((2, 2), dtype='int32')
     for ac in af['data']:
         mask = af['data'][ac][tg]
@@ -315,7 +315,7 @@ def compute_hac(arg, af, d_name):
     if not os.path.exists(f"{path}/results/"):
         os.system(f"mkdir {path}/results/")
     make_db(af['data'])
-    tg = af['metadata']['tags'][0]
+    tg = list(af['metadata']['tags_dict'])[0]
     for ac in af['data']:
         mask_sz = af['data'][ac][tg]
         af['data'][ac]['H0'] = ['.'] * len(mask_sz)
@@ -363,8 +363,8 @@ def compute_hac(arg, af, d_name):
             print(f"{float(cnt) / len(af['data']):.0%} completed in {float(time.time() - start_time):5,.0f} seconds",
                   flush=True)
     details.close()
-    af['metadata']['tags'].append('H0')
-    af['metadata']['tags'].append('H1')
+    af['metadata']['tags_dict']['H0'] = 'Homology to 0 annotation'
+    af['metadata']['tags_dict']['H1'] = 'Homology to 1 annotation'
     for ac in af['data']:
         af['data'][ac]['H0'] = ''.join(af['data'][ac]['H0'])
         af['data'][ac]['H1'] = ''.join(af['data'][ac]['H1'])
@@ -427,9 +427,9 @@ def get_hac_top(d_name, sz, min_identity, min_size):
 
 
 def hac_resolve_conflict(afc, priority=None):
-    tg = afc['metadata']['tags'][0]
-    afc['metadata']['tags'].remove('H0')
-    afc['metadata']['tags'].remove('H1')
+    tg = list(afc['metadata']['tags_dict'])[0]
+    del afc['metadata']['tags_dict']['H0']
+    del afc['metadata']['tags_dict']['H1']
     for ac in afc['data']:
         mask_list = list(afc['data'][ac][tg])
         for ii in range(len(mask_list)):
