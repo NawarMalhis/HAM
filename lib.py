@@ -100,10 +100,10 @@ def load_data_2files(arg):
     pf2 = f"{arg.path}/{arg.in_file2}"
     if1 = arg.in_file1.split('.')[0]
     if2 = arg.in_file2.split('.')[0]
-    data2['a_fasta'][if1] = aff_load(in_file=pf1)
-    data2['a_fasta'][if2] = aff_load(in_file=pf2)
+    data2['a_fasta'][if1] = aff_load_simple(in_file=pf1)
+    data2['a_fasta'][if2] = aff_load_simple(in_file=pf2)
     for df in data2['a_fasta']:
-        tg = data2['a_fasta'][df]['metadata']['tags'][0]
+        tg = list(data2['a_fasta'][df]['metadata']['tags_dict'].keys())[0]
         for ac in data2['a_fasta'][df]['data']:
             data2['a_fasta'][df]['data'][ac][tg] = data2['a_fasta'][df]['data'][ac][tg].replace('x', '-')
     add_data2_metadata(data2)
@@ -135,13 +135,13 @@ def compute_ham(arg, data2):
     details = open(f"{arg.path}/results/ham-details-{sq_id}-{db_id}.tsv", 'w')
     print(f"# identity cutoff:\t{arg.identity_cut_off}\n# minimum_aligned_size:\t{arg.minimum_aligned_size}",
           file=details)
-    sq_tag = data2['a_fasta'][sq_id]['metadata']['tags'][0]
-    db_tag = data2['a_fasta'][db_id]['metadata']['tags'][0]
+    sq_tag = list(data2['a_fasta'][sq_id]['metadata']['tags_dict'].keys())[0]
+    db_tag = list(data2['a_fasta'][db_id]['metadata']['tags_dict'].keys())[0]
     print(f"# AC({sq_id})\tsize\tpos\tAA\t{sq_tag}\tAC({db_id})\tsize\tpos\tAA\t{db_tag}\tidentity\tlength",
           file=details)
     for xx in ['0', '1', '-']:
-        data2['a_fasta'][db_id]['metadata']['tags'].append(f'H{xx}')
-        data2['a_fasta'][sq_id]['metadata']['tags'].append(f'H{xx}')
+        data2['a_fasta'][db_id]['metadata']['tags_dict'][f'H{xx}'] = f'{xx} annotation'
+        data2['a_fasta'][sq_id]['metadata']['tags_dict'][f'H{xx}'] = f'{xx} annotation'
         for d_ac in db_data:
             db_data[d_ac][f'H{xx}'] = ['.'] * len(db_data[d_ac][db_tag])
         for q_ac in sq_data:
@@ -258,9 +258,11 @@ def hac_cross_stat(af, counts, d_name=''):
 
 
 def ham_cross_stat(af, f1, f2):
-    if not af['metadata']['statistics']:
-        aff_gen_statistics(af)
-    ky_list = af['metadata']['tags']
+    # if not af['metadata']['counts']:
+    aff_gen_counts(af)
+    # print(list(af['metadata']['counts']), flush=True)
+    # exit(0)
+    ky_list = list(af['metadata']['tags_dict'].keys())
     counts = np.zeros((3, 3), dtype='int32')
     for ac in af['data']:
         for m, h0, h1, h_ in zip(af['data'][ac][ky_list[0]], af['data'][ac]['H0'],
@@ -276,10 +278,10 @@ def ham_cross_stat(af, f1, f2):
             if h_ == '-':
                 counts[im][2] += 1
 
-    m_totals = np.array([af['metadata']['statistics'][ky_list[0]]['0'],
-                         af['metadata']['statistics'][ky_list[0]]['1'],
-                         af['metadata']['statistics'][ky_list[0]]['-']], dtype='int32')
-    tg = af['metadata']['tags'][0]
+    m_totals = np.array([af['metadata']['counts']['tags_dict'][ky_list[0]]['0'],
+                         af['metadata']['counts']['tags_dict'][ky_list[0]]['1'],
+                         af['metadata']['counts']['tags_dict'][ky_list[0]]['-']], dtype='int32')
+    tg = ky_list[0]  # af['metadata']['tags_dict'][0]
     total = m_totals[0:2].sum()
     h_total = counts[0:2, 0:2].sum()
     ret = f"# HAM Cross-annotations\n# ------------\t-------\t{f1}(0)\t{f1}(0)\t{f1}(1)\t{f1}(1)\n"
@@ -296,7 +298,7 @@ def ham_cross_stat(af, f1, f2):
     ret = ret + f"# The cross-annotation 'Percentages' provides the percentages of each {f1} class residues\n"
     ret = ret + f"#    homologous to {f2} for all possible '0' and '1' annotations in {f1} and {f2}.\n#\n"
     ret = ret + "# Examples:\n"
-    c0 = af['metadata']['statistics'][tg]['0']
+    c0 = af['metadata']['counts']['tags_dict'][tg]['0']
     ret = ret + f"#  1) {h_total/total:.2%} ({h_total:,}) of the {f1} total annotated residues ({total:,}) are "
     ret = ret + f"homologous to {f2}.\n"
     ret = ret + f"#  2) {counts[0][0]/c0:.2%} ({counts[0][0]:,}) of the {f1} '0' annotated residues ({c0:,}) are "
