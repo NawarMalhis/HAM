@@ -244,16 +244,16 @@ def hac_cross_stat(af, counts, d_name=''):
                     if af['data'][ac][f'H{di}'][i] == str(di):
                         homology[qi][di] += 1
     ret = '# Annotation conflict summery:\n'
-    ret = f"{ret}#   {d_name}[0] count:\t{counts[0]:,}.\n"
-    ret = f"{ret}#   {d_name}[1] count:\t{counts[1]:,}.\n#\n"
-    ret = f"{ret}#   The number of {d_name}[0] residues homologous to at least one {d_name}[0] is"
-    ret = f"{ret} {homology[0][0]:,}, which is {homology[0][0]/counts[0]:.2%} of {d_name}[0].\n"
-    ret = f"{ret}#   The number of {d_name}[0] residues homologous to at least one {d_name}[1] is"
-    ret = f"{ret} {homology[0][1]:,}, which is {homology[0][1]/counts[0]:.2%} of {d_name}[0].\n"
-    ret = f"{ret}#   The number of {d_name}[1] residues homologous to at least one {d_name}[0] is"
-    ret = f"{ret} {homology[1][0]:,}, which is {homology[1][0]/counts[1]:.2%} of {d_name}[1].\n"
-    ret = f"{ret}#   The number of {d_name}[1] residues homologous to at least one {d_name}[1] is"
-    ret = f"{ret} {homology[1][1]:,}, which is {homology[1][1]/counts[1]:.2%} of {d_name}[1].\n#"
+    ret = f"{ret}#   {d_name} '0' count:\t{counts[0]:,}.\n"
+    ret = f"{ret}#   {d_name} '1' count:\t{counts[1]:,}.\n#\n"
+    ret = f"{ret}#   The number of {d_name} '0' residues homologous to at least one {d_name} '0' is"
+    ret = f"{ret} {homology[0][0]:,}, which is {homology[0][0]/counts[0]:.2%} of {d_name} '0'.\n"
+    ret = f"{ret}#   The number of {d_name} '0' residues homologous to at least one {d_name} '1' is"
+    ret = f"{ret} {homology[0][1]:,}, which is {homology[0][1]/counts[0]:.2%} of {d_name} '0'.\n"
+    ret = f"{ret}#   The number of {d_name} '1' residues homologous to at least one {d_name} '0' is"
+    ret = f"{ret} {homology[1][0]:,}, which is {homology[1][0]/counts[1]:.2%} of {d_name} '1'.\n"
+    ret = f"{ret}#   The number of {d_name} '1' residues homologous to at least one {d_name} '1' is"
+    ret = f"{ret} {homology[1][1]:,}, which is {homology[1][1]/counts[1]:.2%} of {d_name} '1'.\n#"
     return ret
 
 
@@ -284,15 +284,18 @@ def ham_cross_stat(af, f1, f2):
     tg = ky_list[0]  # af['metadata']['tags_dict'][0]
     total = m_totals[0:2].sum()
     h_total = counts[0:2, 0:2].sum()
+    h0_disc = f"‘0’ for residues that are homologous to ‘0’ annotated residues in {f2}, otherwise, it is ‘.’."
+    h1_disc = f"‘1’ for residues that are homologous to ‘1’ annotated residues in {f2}, otherwise, it is ‘.’."
+    h__disc = f"‘-’ for residues that are homologous to ‘-’ annotated residues in {f2}, otherwise, it is ‘.’."
+    af['metadata']['tags_dict']['H0'] = h0_disc
+    af['metadata']['tags_dict']['H1'] = h1_disc
+    af['metadata']['tags_dict']['H-'] = h__disc
     ret = f"# HAM Cross-annotations\n# ------------\t-------\t{f1}(0)\t{f1}(0)\t{f1}(1)\t{f1}(1)\n"
     ret = ret + f"# ------------\th_total\t{f2}(0)\t{f2}(1)\t{f2}(0)\t{f2}(1)\n"
     ret = ret + f"# Counts ....:\t{h_total:,}\t{counts[0][0]:,}\t{counts[0][1]:,}\t{counts[1][0]:,}\t{counts[1][1]:,}\n"
     ret = ret + f"# Percentages:\t{float(h_total)/total:.2%}\t{float(counts[0][0]) / m_totals[0]:.2%}\t"
     ret = ret + f"{float(counts[0][1]) / m_totals[0]:.2%}\t{float(counts[1][0]) / m_totals[1]:.2%}\t"
     ret = ret + f"{float(counts[1][1]) / m_totals[1]:.2%}\n#\n"
-    ret = ret + f"# H0 tag for the number of residues in {f1} that are homologous to ‘0’ annotated {f2} residues.\n"
-    ret = ret + f"# H1 tag for the number of residues in {f1} that are homologous to ‘1’ annotated {f2} residues.\n"
-    ret = ret + f"# H- tag for the number of residues in {f1} that are homologous to ‘-’ annotated {f2} residues.\n#\n"
     ret = ret + f"# The cross-annotation 'Counts' provides the counts of {f1} residues homologous to {f2} for all\n"
     ret = ret + f"#    possible '0' and '1' annotations in {f1} and {f2}.\n#\n"
     ret = ret + f"# The cross-annotation 'Percentages' provides the percentages of each {f1} class residues\n"
@@ -363,8 +366,10 @@ def compute_hac(arg, af, d_name):
             print(f"{float(cnt) / len(af['data']):.0%} completed in {float(time.time() - start_time):5,.0f} seconds",
                   flush=True)
     details.close()
-    af['metadata']['tags_dict']['H0'] = 'Homology to 0 annotation'
-    af['metadata']['tags_dict']['H1'] = 'Homology to 1 annotation'
+    tmp = "‘0’ for residues that are homologous to ‘0’ annotated residues, otherwise, it is ‘.’."
+    af['metadata']['tags_dict']['H0'] = tmp
+    tmp = "‘1’ for residues that are homologous to ‘1’ annotated residues, otherwise, it is ‘.’."
+    af['metadata']['tags_dict']['H1'] = tmp
     for ac in af['data']:
         af['data'][ac]['H0'] = ''.join(af['data'][ac]['H0'])
         af['data'][ac]['H1'] = ''.join(af['data'][ac]['H1'])
@@ -422,7 +427,7 @@ def print_hac_header(d_name, fout, process_time, seq_count, counts, homology, cu
 
 def get_hac_top(d_name, sz, min_identity, min_size):
     ret = f"# Homology Annotation Conflict (HAC) for {d_name}, {sz:,} sequences."
-    ret = f"{ret}\n#\tMinimum identity: {min_identity}%\n#\tMinimum match: {min_size} residues\n#"
+    ret = f"{ret}\n#\tHomology minimum identity: {min_identity}%\n#\tHomology minimum length: {min_size} residues\n#"
     return ret
 
 

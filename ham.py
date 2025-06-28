@@ -8,8 +8,8 @@ if __name__ == "__main__":
     hf_names = get_homology_file_names(names=list(data2['a_fasta'].keys()))
     for af_dta in data2['a_fasta']:
         _f_name = f"{arg.path}/results/{hf_names[af_dta]['out_file']}"
-        _header_top = f"# Minimum identity: {arg.identity_cut_off}%\n# Minimum match: {arg.minimum_aligned_size}"
-        _header_top = f"{_header_top} residues\n#"
+        _header_top = f"# Homology minimum identity: {arg.identity_cut_off}%\n"
+        _header_top = f"{_header_top}# Homology minimum length: {arg.minimum_aligned_size} residues\n#"
         _header_bottom = ham_cross_stat(data2['a_fasta'][af_dta], f1=af_dta, f2=hf_names[af_dta]['to'])
         # annotated_fasta_remove_empty(data2['a_fasta'][af_dta], 'H1')
         data2['metadata']['data_name'] = af_dta
