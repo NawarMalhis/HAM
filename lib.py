@@ -133,7 +133,7 @@ def compute_ham(arg, data2):
     sq_data = data2['a_fasta'][sq_id]['data']
     make_db(db_data)
     details = open(f"{arg.path}/results/ham-details-{sq_id}-{db_id}.tsv", 'w')
-    print(f"# identity cutoff:\t{arg.identity_cut_off}\n# minimum_aligned_size:\t{arg.minimum_aligned_size}",
+    print(f"# Homology minimum identity:\t{arg.identity_cut_off}\n# Homology minimum length:\t{arg.minimum_aligned_size}",
           file=details)
     sq_tag = list(data2['a_fasta'][sq_id]['metadata']['tags_dict'].keys())[0]
     db_tag = list(data2['a_fasta'][db_id]['metadata']['tags_dict'].keys())[0]
@@ -290,8 +290,8 @@ def ham_cross_stat(af, f1, f2):
     af['metadata']['tags_dict']['H0'] = h0_disc
     af['metadata']['tags_dict']['H1'] = h1_disc
     af['metadata']['tags_dict']['H-'] = h__disc
-    ret = f"# HAM Cross-annotations\n# ------------\t-------\t{f1}(0)\t{f1}(0)\t{f1}(1)\t{f1}(1)\n"
-    ret = ret + f"# ------------\th_total\t{f2}(0)\t{f2}(1)\t{f2}(0)\t{f2}(1)\n"
+    ret = f"# HAM Cross-annotations\n# {f1}\t-------\t'0'\t'0'\t'1'\t'1'\n"
+    ret = ret + f"# {f2}\th_total\t'0'\t'1'\t'0'\t'1'\n"
     ret = ret + f"# Counts ....:\t{h_total:,}\t{counts[0][0]:,}\t{counts[0][1]:,}\t{counts[1][0]:,}\t{counts[1][1]:,}\n"
     ret = ret + f"# Percentages:\t{float(h_total)/total:.2%}\t{float(counts[0][0]) / m_totals[0]:.2%}\t"
     ret = ret + f"{float(counts[0][1]) / m_totals[0]:.2%}\t{float(counts[1][0]) / m_totals[1]:.2%}\t"
