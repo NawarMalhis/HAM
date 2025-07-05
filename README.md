@@ -1,10 +1,10 @@
 # Homology-based Annotation Masking (HAM) and Homology Annotation Conflict (HAC)
 
-While annotated protein sequences are widely used in machine learning applications, pre-processing these sequences regarding homology is mainly limited to clustering complete sequences based on global alignment without considering their annotations. Here, I am introducing new tools that identify all possible local homologies between annotated sequences within the same or across two datasets and then resolve these homologies.
+Accurate preprocessing of annotated protein sequences with regard to homologies is essential for maintaining the integrity of machine-learning applications. This study presents two new tools—HAM and HAC—developed to address key challenges, including data leakage and annotation conflicts. HAM detects local homologous regions across datasets and applies annotation masking to prevent contamination between training and test sets. HAC identifies local homologies within a single dataset, exposing and resolving conflicting annotations. Applied to three benchmark datasets, these tools uncover significant overlaps and annotation inconsistencies, underscoring the need to integrate them into standard preprocessing pipelines to improve the reliability of models predicting intrinsically disordered protein binding sites.
 
 **Please reference the following preprint:**
 
-Malhis N. Pre-processing annotated homologous regions in protein sequences concerning machine-learning applications" *bioRxiv* (2024). https://doi.org/10.1101/2024.10.25.620288   
+Malhis N. Pre-processing homologous regions in annotated protein sequences concerning machine-learning applications" *bioRxiv* (2024). https://doi.org/10.1101/2024.10.25.620288   
 
 ### Minimum Hardware Requirements
 
@@ -37,7 +37,7 @@ conda activate ham_env
 ```
 
 ### Input data:
-Input data should be in an annotated fasta format such that each sequence is annotated with a single line of annotation; for each sequence, we need a fasta header line with a unique accession, a sequence line, and an annotation line. Annotations can include '1', '0', and '-'. Where '-'is used as a mask that is neither '1' nor '0'. The annotated fasta format file can start with lines marked with '#' as comments. Example of a sequence in an annotated fasta format with a single annotation line:
+Input data should be in a simple annotated FASTA format, where each sequence is annotated with a single line of annotation. For each sequence, we require a FASTA header line with a unique accession, a sequence line, and an annotation line. Annotations can include '1', '0', and '-'. Where '-' is used as a mask that is neither '1' nor '0'. The simple annotated fasta format file can start with lines marked with '#' as comments. Example of a sequence in a simple annotated fasta format:
 ```bash
 >Q86FP9
 MKHFAILILAVVASAVVMAYPERDSAKEGNQEQERALHVKVQKRTDGDADYDEYEEDGTTPTPDPTAPTAKPRLRGNKP
@@ -53,16 +53,16 @@ The data directory can be located anywhere.
     • Number of threads, default 8:	-num_threads 8
 
 ## HAM: Homology-based Annotation Masking
-This includes two tools, ham.py and ham_mask_homologous.py. The first, ham.py, identifies homologous regions between the two input files. The second, ham_mask_homologous.py, masks those regions identified by ham.py.
+This includes two tools, ham.py and ham_mask_homologous.py. The first, ham.py, identifies homologous regions between the two input files. The second, ham_mask_homologous.py, masks those homologous regions identified by ham.py.
 
 ### HAM Example:
 First, we run ham.py for each of our training/testing datasets to identify shared homologous regions.
 ```bash
-(ham_env) ~/Tools/HAM$ python3 ham.py -in1 TS2008.af -in2 TR2008.af -p ~/data/
+(ham_env) ~/Tools/HAM$ python3 ham.py -in1 TS2008.saf -in2 TR2008.saf -p ~/data/
 ```
 A results directory is created inside our data directory, and three files are added:
 1. ham-details-TS2008-TR2008.tsv: includes a list of the one-to-one residue homology between the two input files.
-2. TR2008-homology-to-TS2008.af: this is the same TR2008.af input file with three extra annotation lines added, H0, shows the ‘0’ annotations of homologous residues in TS2008.af. 'H1' shows the '1' annotations of homologous residues, and 'H-'shows the '-' annotations of homologous residues. Example line:
+2. TR2008-homology-to-TS2008.af: this is the same TR2008.saf input file with three extra annotation lines added, H0, shows the ‘0’ annotations of homologous residues in TS2008.saf. 'H1' shows the '1' annotations of homologous residues, and 'H-'shows the '-' annotations of homologous residues. Example line:
 ```bash
 >PDB:1a3b_I
 ITYTDCTESGQDLCLCEGSDVCGKGNKCILGSNGEENQCVTGEGTPKPQSHNDGDFEEIPEEYLQ
@@ -71,32 +71,32 @@ ITYTDCTESGQDLCLCEGSDVCGKGNKCILGSNGEENQCVTGEGTPKPQSHNDGDFEEIPEEYLQ
 ........................................................111111...
 ..........................--------...............................
 ```
-3. TS2008-homology-to-TR2008.af: just like with TR2008-homology-to-TS2008.af. This file identifies regions in TS2008.af that are homologous to those in TR2008.af.
+3. TS2008-homology-to-TR2008.af: just like with TR2008-homology-to-TS2008.af. This file identifies regions in TS2008.af that are homologous to those in TR2008.saf.
 
 Note that we can run ham multiple times against different files:
 ```bash
-(ham_env) ~/Tools/HAM$ python3 ham.py -in1 TS2008.af -in2 xxxx.af -p ~/data/
-(ham_env) ~/Tools/HAM$ python3 ham.py -in1 TS2008.af -in2 yyyy.af -p ~/data/
+(ham_env) ~/Tools/HAM$ python3 ham.py -in1 TS2008.af -in2 xxxx.saf -p ~/data/
+(ham_env) ~/Tools/HAM$ python3 ham.py -in1 TS2008.af -in2 yyyy.saf -p ~/data/
 ```
 Then, we run ham_mask_homologous.py to mask homologous residues identified by all previous runs:
 ```bash
-(ham_env) ~/Tools/HAM$ python3 ham_mask_homologous.py -in TS2008.af -p data/
+(ham_env) ~/Tools/HAM$ python3 ham_mask_homologous.py -in TS2008.saf -p data/
 ```
-ham_mask_homologous reads TS2008.af from the data directory, then searches for all files in the results directory that start with "TS2008-homology-to-", and processes them one at a time by masking TS2008.af residues that are homologous. So, in this example, ham_mask_homologous will consider TS2008-homology-to-TR2008.af, TS2008-homology-to-xxxx.af, and TS2008-homology-to-yyyy.af.
+ham_mask_homologous reads TS2008.saf from the data directory, then searches for all files in the results directory that start with "TS2008-homology-to-", and processes them one at a time by masking TS2008.saf residues that are homologous. In this example, ham_mask_homologous will consider TS2008 Homology to TR2008.af, TS2008-homology-to-xxxx.af, and TS2008-homology-to-yyyy.af.
 The final masked dataset is saved in the data directory as ham-masked-TS2008.af
 
 ## HAC: Homology Annotation Conflict
 This includes two tools, hac.py and hac_resolve_conflict.py. The first, hac.py, identifies homologous regions with conflicting annotations between the sequences of the input file. The second, hac_resolve_conflict.py, enables us to resolve these conflicting annotations identified by hac.py by reannotating them with either '1', '0', or '-' (masking).
 
 ### HAC Example:
-Our input file TR2008.af in the data directory 'data/'. First, we run hac.py for each input file:
+Our input file, TR2008.saf, is located in the data directory 'data/'. First, we run hac.py for each input file:
 
 ```bash
-(ham_env) ~/Tools/HAM$ python3 hac.py -in TR2008.af -p data
+(ham_env) ~/Tools/HAM$ python3 hac.py -in TR2008.saf -p data
 ```
 This generates two files: 
     • hac-details-TR2008.tsv: includes a list of the one-to-one residue homology between the sequences of the input file.
-    • TR2008-annotation-conflict.af: the same TR2008.af input file with two extra annotation lines added, H0 shows the '0' annotations of the homologous residues in TR2008.af. and 'H1' shows the '1' annotations. Example sequence with annotations in the TR2008-annotation-conflict.af file:
+    • TR2008-annotation-conflict.af: the same TR2008.saf input file with two extra annotation lines added, H0 shows the '0' annotations of the homologous residues in TR2008.saf, and 'H1' shows the '1' annotations. Example sequence with annotations in the TR2008-annotation-conflict.af file:
 ```bash
 >PDB:1a3b_I
 ITYTDCTESGQDLCLCEGSDVCGKGNKCILGSNGEENQCVTGEGTPKPQSHNDGDFEEIPEEYLQ
@@ -106,7 +106,7 @@ ITYTDCTESGQDLCLCEGSDVCGKGNKCILGSNGEENQCVTGEGTPKPQSHNDGDFEEIPEEYLQ
 ```
 To resolve the conflict, we can choose one of three priorities: '01', '10', and '-'.
 ```bash
-(ham_env) ~/Tools/HAM$ python3 hac_resolve_conflict.py -in TR2008.af -p data/ -pr '01'
+(ham_env) ~/Tools/HAM$ python3 hac_resolve_conflict.py -in TR2008.saf -p data/ -pr '01'
 ```
 
 '01' converts conflicting annotations of '0' and '1' into '1'. Thus, the updated annotation to the above sequence is:
