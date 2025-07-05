@@ -1,4 +1,4 @@
-# Measuring Annotated Homology (HAM) and Homology Annotation Conflict (HAC)
+# Homology-based Annotation Masking (HAM) and Homology Annotation Conflict (HAC)
 
 While annotated protein sequences are widely used in machine learning applications, pre-processing these sequences regarding homology is mainly limited to clustering complete sequences based on global alignment without considering their annotations. Here, I am introducing new tools that identify all possible local homologies between annotated sequences within the same or across two datasets and then resolve these homologies.
 
@@ -52,7 +52,7 @@ The data directory can be located anywhere.
     • Minimum aligned size, default 10:	-msz	10
     • Number of threads, default 8:	-num_threads 8
 
-## HAM: Measuring Annotated Homology
+## HAM: Homology-based Annotation Masking
 This includes two tools, ham.py and ham_mask_homologous.py. The first, ham.py, identifies homologous regions between the two input files. The second, ham_mask_homologous.py, masks those regions identified by ham.py.
 
 ### HAM Example:
@@ -62,7 +62,7 @@ First, we run ham.py for each of our training/testing datasets to identify share
 ```
 A results directory is created inside our data directory, and three files are added:
 1. ham-details-TS2008-TR2008.tsv: includes a list of the one-to-one residue homology between the two input files.
-2. TR2008-homology-to-TS2008.af: this is the same TR2008.af input file with three extra annotation lines added, H0, shows the ‘0’ annotations of homologous residues in TS2008.af. 'H1' shows the '1' annotations of homologous residues, and 'H-'shows the '-'annotations of homologous residues. Example line:
+2. TR2008-homology-to-TS2008.af: this is the same TR2008.af input file with three extra annotation lines added, H0, shows the ‘0’ annotations of homologous residues in TS2008.af. 'H1' shows the '1' annotations of homologous residues, and 'H-'shows the '-' annotations of homologous residues. Example line:
 ```bash
 >PDB:1a3b_I
 ITYTDCTESGQDLCLCEGSDVCGKGNKCILGSNGEENQCVTGEGTPKPQSHNDGDFEEIPEEYLQ
