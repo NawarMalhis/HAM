@@ -3,11 +3,11 @@ channels:
   - defaults
   - bioconda
   - conda-forge
-  - requests
 dependencies:
   - python
   - blast
   - numpy
+  - requests
   - pip:
     - crc64iso
     - biopython
